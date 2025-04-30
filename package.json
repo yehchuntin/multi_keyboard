@@ -15,6 +15,7 @@
     "scripts"
   ],
   "scripts": {
+    "start-prod": "cross-env NODE_ENV=production node --enable-source-maps ./root/index.js",
     "postinstall": "husky && patch-package",
     "config-lint": "node scripts/config-lint.js",
     "translate": "node scripts/translate.js",
@@ -26,11 +27,11 @@
     "stylelint": "stylelint '{**/*,*}.{less,css}'",
     "stylelint-fix": "stylelint '{**/*,*}.{less,css}' --fix",
     "format": "prettier '{**/*,*}.{js,ts,tsx,less,css}' --write",
-    "build": "env NODE_ENV=production webpack",
-    "build-dev": "env NODE_ENV=development webpack",
-    "watch": "env NODE_ENV=development webpack --watch",
-    "start": "env NODE_ENV=development node --enable-source-maps ./root/index.js",
-    "start-docker": "env NODE_ENV=production ./packages/devenv/lib/initdb.ts && env NODE_ENV=production node --enable-source-maps ./root/index.js"
+    "build": "cross-env NODE_ENV=production webpack",
+    "build-dev": "cross-env NODE_ENV=development webpack",
+    "watch": "cross-env NODE_ENV=development webpack --watch",
+    "start": "cross-env NODE_ENV=development node --enable-source-maps ./root/index.js",
+    "start-docker": "cross-env NODE_ENV=production ./packages/devenv/lib/initdb.ts && cross-env NODE_ENV=production node --enable-source-maps ./root/index.js"
   },
   "dependencies": {
     "@fastr/client": "^0.1.1",
@@ -68,6 +69,7 @@
     "react-dom": "^19.0.0",
     "react-intl": "^7.1.6",
     "react-router": "^7.4.0",
+    "sqlite3": "^5.1.7",
     "tslib": "^2.8.1",
     "xml-js": "^1.6.11",
     "zod": "^3.24.2"
@@ -83,7 +85,13 @@
     "@types/react-dom": "^19.0.4",
     "cheerio": "^1.0.0",
     "confusing-browser-globals": "^1.0.11",
+    "cross-env": "^7.0.3",
+    "css-loader": "^7.1.2",
+    "less": "^4.3.0",
+    "less-loader": "^12.2.0",
+    "mini-css-extract-plugin": "^2.9.2",
     "rich-assert": "^0.0.3",
+    "style-loader": "^4.0.0",
     "typescript": "^5.8.2"
   }
 }

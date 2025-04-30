@@ -40,6 +40,7 @@ const localIdentName = dev
 const rule_ts = () => ({
   test: /\.(ts|tsx)$/,
   type: "javascript/auto",
+  exclude: /node_modules\/knex/,
   use: [
     {
       loader: "ts-loader",
@@ -123,16 +124,16 @@ export default [
           use: "null-loader",
         },
         {
-          test: /\/knex\/lib\/dialects\//,
-          exclude: /\/mysql|sqlite3|better-sqlite3\//,
+          test: /[\\/]knex[\\/]lib[\\/]dialects[\\/](mysql|mysql2|mssql|oracledb|postgres|pgnative|pg|pg-query-stream|redshift)[\\/]/,
           use: "null-loader",
         },
         {
-          test: /\/knex\/lib\/migrations\//,
+          test: /[\\/]knex[\\/]lib[\\/]migrations[\\/]/,
           use: "null-loader",
         },
       ],
     },
+
     externals: {
       "sqlite3": "commonjs sqlite3",
       "better-sqlite3": "commonjs better-sqlite3",
@@ -145,6 +146,13 @@ export default [
       chunkIds: "named",
     },
     devtool: "source-map",
+    ignoreWarnings: [
+      {
+        module: /node_modules[\\/]knex[\\/]/,
+        message: /Failed to parse source map/,
+      },
+    ],
+
     plugins: [
       new webpack.DefinePlugin({
         ...ENV,
@@ -177,7 +185,23 @@ export default [
         rule_js(),
         rule_less(true),
         {
+          test: /\.(data|stats)$/i,
+          type: "asset/resource",
+        },
+        {
+          test: /\.(mp3|wav)$/i,
+          type: "asset/resource",
+        },
+        {
+          test: /\.svg$/i,
+          type: "asset/resource",
+        },
+        {
           test: /\/assets\//,
+          type: "asset/resource",
+        },
+        {
+          test: /\.(png|jpe?g|gif)$/i,
           type: "asset/resource",
         },
       ],
@@ -216,7 +240,7 @@ export default [
         "typeof window": JSON.stringify("object"),
       }),
       new MiniCssExtractPlugin({
-        filename: `${filename}.css`,
+        filename: `styles.css`,
         chunkFilename: `${chunkFilename}.css`,
         ignoreOrder: true,
       }),

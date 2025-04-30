@@ -42,6 +42,10 @@ export class ManifestPlugin {
   }
 }
 
+function normalizePath(path) {
+  return path.replace(/\\/g, "/");
+}
+
 function processAssets(compilation, options) {
   const stats = compilation.getStats().toJson({
     all: false,
@@ -98,8 +102,8 @@ function computeAssets({ publicPath, assets, assetsByChunkName }) {
   for (const [name, files] of Object.entries(assetsByChunkName)) {
     for (const file of files) {
       result.push({
-        name: join(publicPath, name + extname(file)),
-        file: join(publicPath, file),
+        name: normalizePath(join(publicPath, name + extname(file))), // ✅ 修改
+        file: normalizePath(join(publicPath, file)), // ✅ 修改
       });
     }
   }
@@ -107,8 +111,8 @@ function computeAssets({ publicPath, assets, assetsByChunkName }) {
   for (const { name, info: { sourceFilename: file = null } = null } of assets) {
     if (file != null) {
       result.push({
-        name: join(publicPath, basename(file)),
-        file: join(publicPath, name),
+        name: normalizePath(join(publicPath, basename(file))), // ✅ 修改
+        file: normalizePath(join(publicPath, name)),
       });
     }
   }
